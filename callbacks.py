@@ -8,7 +8,6 @@ and resources.
 
 To add more than one callback:
 model.fit(train_x,train_y,callbacks=[callback_1,callback_2,callback_3,...])
-
 '''
 
 from __future__ import print_function
