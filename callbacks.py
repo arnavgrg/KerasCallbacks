@@ -148,4 +148,12 @@ class loss_after_each_batch(keras.callbacks.Callback):
 
     def on_batch_end(self, batch, logs={}):
         self.losses.append(logs.get('loss'))
+
+class approximate_training_time(keras.callbacks.Callback):
+
+    '''
+    Return an approximation for the total training time.
+
+    Usage:
+    '''
     
