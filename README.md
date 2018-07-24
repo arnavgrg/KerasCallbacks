@@ -1,6 +1,6 @@
 # Keras Callbacks
 
-Documentation/Usage is provided inline.
+Documentation/Usage for different callbacks are provided inline.
 
 After saving the python script, you can import into your program using:
 
