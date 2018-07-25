@@ -13,6 +13,7 @@ To add more than one callback, just list add them to the list:
 from __future__ import print_function
 from tensorflow import keras
 import warnings
+import time
 
 def error_message(callback_name):
     print("Stopping training. "+str(callback_name)+" detected.")
@@ -126,6 +127,35 @@ class increment_in_loss(keras.callbacks.Callback):
             index_ = -x-1
             self.losses.pop(index_)
 
+class approximate_training_time(keras.callbacks.Callback):
+
+    '''
+    Prints an approximation for the total training time 
+    based on the number of epochs
+
+    Usage:
+        history = approximate_training_time(70)
+        model.fit(train_x,train_y,callbacks=[history])
+    '''
+    def __init__(self, num_epochs):
+        self.start = 0
+        self.stop = 0
+        self.epochs_ = num_epochs
+        self.expected_runtime = 0
+        self.flag = True
+
+    def on_train_begin(self, logs={}):
+        self.start = time.time()
+        self.losses = []
+
+    def on_epoch_end(self, batch, logs={}):
+        self.losses.append(logs.get('loss'))
+        if self.flag:
+            self.stop = time.time()
+            self.expected_runtime = (self.stop - self.start) * self.epochs_
+            print("\nExpected training time: "+str(self.expected_runtime/60)+" minutes\n")
+            self.flag = False
+
 class loss_after_each_batch(keras.callbacks.Callback):
 
     '''
@@ -148,12 +178,4 @@ class loss_after_each_batch(keras.callbacks.Callback):
 
     def on_batch_end(self, batch, logs={}):
         self.losses.append(logs.get('loss'))
-
-class approximate_training_time(keras.callbacks.Callback):
-
-    '''
-    Return an approximation for the total training time.
-
-    Usage:
-    '''
-    
+        
